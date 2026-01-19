@@ -23,15 +23,20 @@
     <header class="site-header">
       <div class="container nav">
         <div class="logo">
-          <img src="assets/opencuff-logo.svg" alt="OpenCuff logo" />
+          <img src="assets/logo.jpg" alt="OpenCuff logo" />
           <span>OpenCuff</span>
         </div>
         <nav class="nav-links">
           <a href="#features">Features</a>
           <a href="#how">How it works</a>
+          <a href="#examples">Examples</a>
+          <a href="#plugins">Plugins</a>
+          <a href="#cli">CLI</a>
           <a href="#security">Security</a>
+          <a href="https://github.com/OpenCuff/OpenCuff" target="_blank" rel="noreferrer"
+            >GitHub</a
+          >
         </nav>
-        <a class="button ghost" href="mailto:hello@opencuff.ai">Get in touch</a>
       </div>
     </header>
 
@@ -49,6 +54,14 @@
             <div class="hero-actions">
               <a class="button primary" href="#how">See how it works</a>
               <a class="button secondary" href="#features">Explore features</a>
+              <a
+                class="button github"
+                href="https://github.com/OpenCuff/OpenCuff"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Star on GitHub
+              </a>
             </div>
             <div class="hero-tags">
               <span>Policy-based control</span>
@@ -146,6 +159,187 @@
         </div>
       </section>
 
+      <section id="examples" class="section">
+        <div class="container">
+          <div class="section-header">
+            <p class="eyebrow">Examples</p>
+            <h2 id="examples-title">Expose Makefile commands safely</h2>
+          </div>
+          <div class="tabs">
+            <input type="radio" name="example-tab" id="tab-makefile" checked />
+            <input type="radio" name="example-tab" id="tab-pnpm" />
+            <input type="radio" name="example-tab" id="tab-scripts" />
+            <div class="tab-labels">
+              <label for="tab-makefile">Makefile</label>
+              <label for="tab-pnpm">pnpm</label>
+              <label for="tab-scripts">Scripts</label>
+            </div>
+            <div class="tab-panels">
+              <div class="tab-panel panel-makefile">
+                <div class="grid two">
+                  <article class="card code-card">
+                    <h3>Makefile targets become tools</h3>
+                    <p>
+                      OpenCuff discovers targets and exposes them as namespaced tools
+                      like <code>makefile.make_test</code>.
+                    </p>
+                    <pre><code>.PHONY: build test lint
+
+## Build the project
+build:
+  cargo build --release
+
+## Run tests
+test:
+  cargo test</code></pre>
+                  </article>
+                  <article class="card code-card">
+                    <h3>Short configuration</h3>
+                    <p>
+                      Choose which targets are exposed and keep discovery fast and
+                      safe.
+                    </p>
+                    <pre><code>plugins:
+  makefile:
+    type: in_source
+    module: opencuff.plugins.builtin.makefile
+    config:
+      makefile_path: ./Makefile
+      targets: "build,test,lint"
+      extractor: simple</code></pre>
+                  </article>
+                </div>
+              </div>
+              <div class="tab-panel panel-pnpm">
+                <div class="grid two">
+                  <article class="card code-card">
+                    <h3>pnpm scripts become tools</h3>
+                    <p>
+                      Package.json scripts are exposed as tools like
+                      <code>packagejson.pnpm_test</code>.
+                    </p>
+                    <pre><code>{
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "vitest run",
+    "lint": "eslint ."
+  }
+}</code></pre>
+                  </article>
+                  <article class="card code-card">
+                    <h3>Short configuration</h3>
+                    <p>
+                      Auto-detect pnpm or set it explicitly and filter scripts.
+                    </p>
+                    <pre><code>plugins:
+  packagejson:
+    type: in_source
+    module: opencuff.plugins.builtin.packagejson
+    config:
+      package_json_path: ./package.json
+      package_manager: pnpm
+      scripts: "build,test,lint"</code></pre>
+                  </article>
+                </div>
+              </div>
+              <div class="tab-panel panel-scripts">
+                <div class="grid two">
+                  <article class="card code-card">
+                    <h3>Shell scripts become tools</h3>
+                    <p>
+                      Match trusted scripts and expose them as tools like
+                      <code>scripts.deploy</code>.
+                    </p>
+                    <pre><code>scripts/
+  deploy.sh
+  lint.sh
+  release.sh</code></pre>
+                  </article>
+                  <article class="card code-card">
+                    <h3>Short configuration</h3>
+                    <p>
+                      Use glob patterns to expose only approved scripts.
+                    </p>
+                    <pre><code>plugins:
+  scripts:
+    type: in_source
+    module: opencuff.plugins.builtin.scripts
+    config:
+      patterns:
+        - "scripts/*.sh"
+      exclude:
+        - "scripts/internal_*.sh"</code></pre>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="note">
+            For untrusted Makefiles, set <code>trust_makefile: false</code> to
+            avoid parsing that executes <code>$(shell ...)</code>.
+          </p>
+        </div>
+      </section>
+
+      <section id="plugins" class="section alt">
+        <div class="container">
+          <div class="section-header">
+            <p class="eyebrow">Plugin system</p>
+            <h2>Extend OpenCuff without slowing the core</h2>
+          </div>
+          <div class="grid three">
+            <article class="card">
+              <h3>In-source plugins</h3>
+              <p>Fast Python plugins loaded directly inside OpenCuff.</p>
+            </article>
+            <article class="card">
+              <h3>Process plugins</h3>
+              <p>Language-agnostic tools over stdin/stdout JSON.</p>
+            </article>
+            <article class="card">
+              <h3>HTTP plugins</h3>
+              <p>Remote services called over HTTP for scale or isolation.</p>
+            </article>
+          </div>
+          <div class="plugin-notes">
+            <p>
+              Tools are namespaced by plugin name (for example,
+              <code>makefile.make_test</code>), and config changes hot-reload
+              without restarting the server.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="cli" class="section">
+        <div class="container">
+          <div class="section-header">
+            <p class="eyebrow">Cuff CLI</p>
+            <h2>Fast setup with the Cuff command line</h2>
+          </div>
+          <div class="grid two">
+            <article class="card">
+              <h3>Initialize configs</h3>
+              <p>
+                <code>cuff init</code> scans your repo and generates a
+                <code>settings.yml</code> with Makefile, package.json, and script
+                plugins pre-filled.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Run OpenCuff</h3>
+              <p>
+                Start the MCP server locally with stdio, or switch to SSE for
+                remote clients.
+              </p>
+            </article>
+          </div>
+          <pre><code>cuff init
+cuff run
+cuff run -t sse -p 8080</code></pre>
+        </div>
+      </section>
+
       <section id="security" class="section">
         <div class="container split">
           <div>
@@ -168,31 +362,41 @@
         </div>
       </section>
 
-      <section class="section cta">
-        <div class="container cta-card">
-          <div>
-            <p class="eyebrow">Ready to govern AI execution?</p>
-            <h2>Launch OpenCuff with your team today.</h2>
-            <p>
-              Email us to access the launch resources and recommended setup.
-            </p>
-          </div>
-          <a class="button primary" href="mailto:hello@opencuff.ai"
-            >Contact OpenCuff</a
-          >
-        </div>
-      </section>
     </main>
+
+    <script>
+      const exampleTitle = document.getElementById("examples-title");
+      const tabMakefile = document.getElementById("tab-makefile");
+      const tabPnpm = document.getElementById("tab-pnpm");
+      const tabScripts = document.getElementById("tab-scripts");
+
+      const updateExamplesTitle = () => {
+        if (tabPnpm.checked) {
+          exampleTitle.textContent = "Expose pnpm scripts safely";
+        } else if (tabScripts.checked) {
+          exampleTitle.textContent = "Expose scripts safely";
+        } else {
+          exampleTitle.textContent = "Expose Makefile commands safely";
+        }
+      };
+
+      tabMakefile.addEventListener("change", updateExamplesTitle);
+      tabPnpm.addEventListener("change", updateExamplesTitle);
+      tabScripts.addEventListener("change", updateExamplesTitle);
+      updateExamplesTitle();
+    </script>
 
     <footer class="site-footer">
       <div class="container footer-grid">
         <div class="logo">
-          <img src="assets/opencuff-logo.svg" alt="OpenCuff logo" />
+          <img src="assets/logo.jpg" alt="OpenCuff logo" />
           <span>OpenCuff</span>
         </div>
         <p>Secure AI Execution. Governed operations for coding agents.</p>
         <div class="footer-links">
-          <a href="mailto:hello@opencuff.ai">hello@opencuff.ai</a>
+          <a href="https://github.com/OpenCuff/OpenCuff" target="_blank" rel="noreferrer"
+            >github.com/OpenCuff/OpenCuff</a
+          >
           <span>© 2026 OpenCuff</span>
         </div>
       </div>

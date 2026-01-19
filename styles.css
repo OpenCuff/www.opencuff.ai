@@ -150,6 +150,16 @@ h1 {
   background: var(--bg-card);
 }
 
+.button.github {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(20, 24, 36, 0.8);
+  color: var(--text-primary);
+}
+
+.button.github:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
 .button.ghost {
   border: 1px solid var(--border);
   color: var(--text-secondary);
@@ -216,12 +226,97 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
 .card,
 .step {
   background: var(--bg-card);
   border: 1px solid var(--border);
   padding: 1.75rem;
   border-radius: 1.25rem;
+  color: var(--text-secondary);
+}
+
+.code-card pre {
+  margin: 1.25rem 0 0;
+}
+
+.tabs {
+  margin-top: 1.5rem;
+}
+
+.tabs input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tab-labels {
+  display: inline-flex;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 999px;
+  background: rgba(10, 22, 40, 0.8);
+  border: 1px solid rgba(97, 130, 190, 0.35);
+  margin-bottom: 1.5rem;
+}
+
+.tab-labels label {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#tab-makefile:checked ~ .tab-labels label[for="tab-makefile"],
+#tab-pnpm:checked ~ .tab-labels label[for="tab-pnpm"],
+#tab-scripts:checked ~ .tab-labels label[for="tab-scripts"] {
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  border: 1px solid rgba(74, 194, 255, 0.5);
+}
+
+.tab-panels .tab-panel {
+  display: none;
+}
+
+#tab-makefile:checked ~ .tab-panels .panel-makefile,
+#tab-pnpm:checked ~ .tab-panels .panel-pnpm,
+#tab-scripts:checked ~ .tab-panels .panel-scripts {
+  display: block;
+}
+
+pre {
+  background: rgba(8, 18, 36, 0.9);
+  border: 1px solid rgba(97, 130, 190, 0.35);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  color: #e5efff;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+code {
+  font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+.note {
+  margin-top: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.plugin-notes {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(97, 130, 190, 0.35);
+  background: rgba(11, 27, 47, 0.75);
   color: var(--text-secondary);
 }
 
